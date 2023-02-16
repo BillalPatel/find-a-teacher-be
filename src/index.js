@@ -4,7 +4,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 
 const app = express()
-app.use(bodyParser.json())
+app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.use('/', router)
@@ -131,9 +131,22 @@ const dummyTeacherData = [
   },
 ]
 
-app.get('/teachers', function (req, res) {
-  console.log(`App running on ${PORT}`)
-  res.status(201).send(JSON.stringify(dummyTeacherData))
+const dummyMessages = [
+  {
+    message: 'Hi there, I want a teacher for my child.',
+    sender: '',
+    recipient: 'Billal',
+    status: '',
+    date: '',
+  },
+]
+
+app.get('/teachers', (req, res) => {
+  res.status(200).send(JSON.stringify(dummyTeacherData))
+})
+
+app.get('/teacher', (req, res) => {
+  res.status(200).send(JSON.stringify(dummyTeacherData))
 })
 
 app.post('/new/teacher', (req, res) => {
@@ -186,13 +199,26 @@ app.post('/login/teacher', (req, res) => {
 })
 
 app.post('/teacher/message', (req, res) => {
-  console.log('req body', req.body.message.length)
+  // console.log('req body', req.body.message.length)
 
   if (!req.body.message || req.body.message.length < 10) {
     return res.status(200).json({ message: 'Message was not sent correctly.' })
   }
 
+  dummyMessages.push(req.body)
+  console.log('dummyMessages', dummyMessages)
   return res.status(200).json({ message: 'Message sent successfully.' })
 })
 
-app.listen(PORT, () => console.log('listening on port', PORT))
+app.get('/teacher/messages', (req, res) => {
+  console.log('req', req.query.teacherFirstName)
+  dummyMessages.forEach((message) => {
+    console.log('message.recipient', message.recipient)
+    if (message.recipient === req.query.teacherFirstName) {
+      console.log('here')
+    }
+  })
+  return res.status(200).json({ messageData: 'Success' })
+})
+
+app.listen(PORT, () => console.log('Listening on port', PORT))
