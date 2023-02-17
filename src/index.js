@@ -160,6 +160,11 @@ app.post('/new/student', (req, res) => {
   res.status(201).json({ message: 'New student added successfully.' })
 })
 
+app.post('/login/student', (req, res) => {
+  const { emailAddress, password } = req.body
+  console.log('Email:', emailAddress, 'Password:', password)
+})
+
 app.post('/login/teacher', (req, res) => {
   const { emailAddress, password } = req.body
 
